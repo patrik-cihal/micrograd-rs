@@ -11,7 +11,7 @@ enum Operation {
 
 struct ValueInner {
     operation: Operation,
-    eval: f64,
+    pub eval: f64,
     grad: HashMap<String, (f64, u64)>,
 }
 
@@ -109,8 +109,8 @@ impl Value {
     pub fn eval(&self) -> f64 {
         self.value_inner.borrow().eval
     }
-    pub fn grad(&self, label: &str) -> f64 {
-        self.value_inner.borrow().grad[label].0
+    pub fn grad(&self, label: &str) -> Option<f64> {
+        self.value_inner.borrow().grad.get(label).map(|x| x.0)
     }
     pub fn tanh(self) -> Value {
         let e2x = (self.c()*2.0.into()).exp();
